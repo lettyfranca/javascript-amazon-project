@@ -71,6 +71,7 @@ export function calculateCartQuantity() {
     });
 
     document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
+    return cartQuantity;
   };
   
 export function updateQuantity(productId, newQuantity) {
