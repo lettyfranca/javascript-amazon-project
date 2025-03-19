@@ -1,4 +1,9 @@
-export let cart = JSON.parse(localStorage.getItem('cart'));
+export let cart;
+
+loadFromStorage();
+
+export function loadFromStorage() {
+  cart = JSON.parse(localStorage.getItem('cart'));
 
 if (!cart) {
   cart = [{
@@ -11,43 +16,48 @@ if (!cart) {
     deliveryOptionId: '2'
   }];
 }
+}
 
 function saveToStorage() {
   localStorage.setItem('cart', JSON.stringify(cart));
 }
 
-export function addToCart(productId) {
-    let addMsgTime;
-    let validationItem;
-    const quantAdd = parseInt(document.querySelector(`.js-quantity-selector-${productId}`).value);
-    const addMsg = document.querySelector(`.js-added-msg-${productId}`);
-  
-    clearTimeout(addMsgTime);
-      
-    addMsg.classList.add('added-show-msg');
-  
-    addMsgTime = setTimeout(() => {
-      addMsg.classList.remove('added-show-msg');
-    },2000);
-  
-    cart.forEach((cartItem) => {
-      if (productId === cartItem.productId) {
-        validationItem = cartItem;
-      }
-    });
-  
-    if (validationItem) {
-      validationItem.quantity += quantAdd;
-    } else {
-      cart.push({
-        productId,
-        quantity: quantAdd,
-        deliveryOptionId: '1'
-      });
-    }
+export function addMessageCart() {
+  const quantityElement = document.querySelector(`.js-quantity-selector-${productId}`);
 
-    saveToStorage();
+  const quantAdd = parseInt(quantityElement.value);
+  const addMsg = document.querySelector(`.js-added-msg-${productId}`);
+
+  clearTimeout(addMsgTime);
+
+  addMsg.classList.add('added-show-msg');
+  
+  addMsgTime = setTimeout(() => {
+    addMsg.classList.remove('added-show-msg');
+  },2000)
+};
+
+export function addToCart(productId) {
+  let matchingItem;
+
+  cart.forEach((cartItem) => {
+    if (productId === cartItem.productId) {
+      matchingItem = cartItem;
+    }
+  });
+
+  if (matchingItem) {
+    matchingItem.quantity += 1;
+  } else {
+    cart.push({
+      productId: productId,
+      quantity: 1,
+      deliveryOptionId: '1'
+    });
   }
+
+  saveToStorage();
+}
 
 export function removeFromCart(productId) {
     const newCart = [];
